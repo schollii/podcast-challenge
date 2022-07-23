@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  podcast:
+    build: .
+    deploy:
+      replicas: 1
+    networks:
+      default:
+        aliases:
+        - podcast
+    expose:
+      # let docker choose the host port that maps to the container port,
+      # so that hmultiple replicas can be started
+      - "8080"
+
+  nginx:
+    image: nginx:latest
+    hostname: load_balancer
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - podcast
+    ports:
+      - "8081:8081"

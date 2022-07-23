@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# only allow commit if integ test on local host succeeds
+# this will run docker-compose up -d and wait a minute, then
+# shut it down
+
+echo "Precommit hook starting"
+if ./run-test.sh; then
+  echo "Pre-commit hook done"
+else
+  echo "Pre-commit hook is REJECTING this commit: Integration test FAILED (see above for details)"
+  exit 1
+fi
